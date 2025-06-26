@@ -1,6 +1,9 @@
 # Flask-Back
 [![codecov](https://codecov.io/gh/Hcha-byte/Flask-Back/branch/main/graph/badge.svg?token=TY4UGA63NQ)](https://codecov.io/gh/Hcha-byte/Flask-Back)
 [![Tests](https://github.com/Hcha-byte/Flask-Back/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/Hcha-byte/Flask-Back/actions/workflows/test.yml)
+![Python Versions](https://img.shields.io/pypi/pyversions/flask-back)
+[![PyPI version](https://badge.fury.io/py/flask-back.svg)](https://badge.fury.io/py/flask-back)
+
 ![License](https://img.shields.io/github/license/hcha-byte/flask-back)
 
 

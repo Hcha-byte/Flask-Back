@@ -1,5 +1,8 @@
 # Flask-Back
 [![codecov](https://codecov.io/gh/Hcha-byte/Flask-Back/branch/main/graph/badge.svg?token=TY4UGA63NQ)](https://codecov.io/gh/Hcha-byte/Flask-Back)
+[![Tests](https://github.com/Hcha-byte/Flask-Back/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/Hcha-byte/Flask-Back/actions/workflows/test.yml)
+![License](https://img.shields.io/github/license/hcha-byte/flask-back)
+
 
 A lightweight Flask extension for managing back URLs between pages.
 

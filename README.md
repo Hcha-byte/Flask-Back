@@ -1,4 +1,5 @@
 # Flask-Back
+[![codecov](https://codecov.io/gh/Hcha-byte/Flask-Back/branch/main/graph/badge.svg?token=TY4UGA63NQ)](https://codecov.io/gh/Hcha-byte/Flask-Back)
 
 A lightweight Flask extension for managing back URLs between pages.
 

@@ -65,11 +65,19 @@ class Back:
         """
         if request.method != "GET":
             return
-
+        
         if (request.endpoint in self._excluded_endpoints) or (request.path == '/go-back'):
             return
-
-        session["back_url"] = request.path
+        
+        # Prevent saving if referrer is the same as the current path
+        referrer = request.referrer
+        if referrer:
+            # Convert referrer to just the path
+            referrer_path = request.referrer.replace(request.host_url[:-1], "", 1)
+            if referrer_path != request.path:
+                session["back_url"] = referrer_path
+        else:
+            session["back_url"] = request.path
 
     def save_url(self, func=None):
         """

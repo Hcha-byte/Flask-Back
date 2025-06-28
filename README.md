@@ -1,4 +1,4 @@
-![logo](/logo.png)
+![logo](logo.png)
 
 [![codecov](https://codecov.io/gh/Hcha-byte/Flask-Back/branch/main/graph/badge.svg?token=TY4UGA63NQ)](https://codecov.io/gh/Hcha-byte/Flask-Back)
 [![Run Tests](https://github.com/Hcha-byte/Flask-Back/actions/workflows/test.yml/badge.svg)](https://github.com/Hcha-byte/Flask-Back/actions/workflows/test.yml)

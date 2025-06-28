@@ -2,7 +2,8 @@
 [![codecov](https://codecov.io/gh/Hcha-byte/Flask-Back/branch/main/graph/badge.svg?token=TY4UGA63NQ)](https://codecov.io/gh/Hcha-byte/Flask-Back)
 [![Run Tests](https://github.com/Hcha-byte/Flask-Back/actions/workflows/test.yml/badge.svg)](https://github.com/Hcha-byte/Flask-Back/actions/workflows/test.yml)
 ![Python Versions](https://img.shields.io/pypi/pyversions/flask-back)
-[![PyPI version](https://badge.fury.io/py/flask-back.svg)](https://badge.fury.io/py/flask-back)
+[![PyPI](https://img.shields.io/pypi/v/flask-back?label=PyPI&color=brightgreen&cacheSeconds=3600)](https://pypi.org/project/flask-back/)
+
 ![License](https://img.shields.io/github/license/hcha-byte/flask-back)
 
 **Flask-Back** is a lightweight Flask extension for managing "back" URLs to help users return to their previous page in a clean and configurable way.

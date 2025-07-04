@@ -1,30 +1,44 @@
 # flask_back/__init__.py
 
 
-from flask import request, session
-from .version import __version__
+from flask import request, session, redirect, Flask
+from ._version import __version__
 from functools import wraps
 
 
 class Back:
-    def __init__(self, app=None, **settings):
 
+    def __init__(self, app: Flask = None, **settings) -> None:
         """
         Initialize a Back instance.
+        =============================
+        
+        Note
+        -----
+            If an app is provided, this method will call ``init_app()`` to
+            integrate the Back instance with the Flask application using
+            the given settings.
 
-        If an app is given, this calls `init_app` with the given settings.
-
-        :param app: The Flask app to integrate with
-        :param settings: Keyword arguments to pass to `init_app`
+        :param app: The Flask application to integrate with.
+        :type app: Flask or None
+        :param settings: Keyword arguments to pass to ``init_app()``.
+        :type settings: kwargs
+        
+        See Also
+        --------
+            `Back.init_app`
         """
+        
         self._excluded_endpoints = set()
         self._default_url = "/"
         self._use_referrer = False
+        self._home_urls = []
+        self._back_url = True
 
         if app:
             self.init_app(app, **settings)
 
-    def init_app(self, app, **settings):
+    def init_app(self, app: Flask, **settings) -> None:
         """
         Initialize the extension with an app. This is typically called
         automatically when the extension is initialized with an app.
@@ -44,30 +58,84 @@ class Back:
             use_referrer : bool
                 Whether to use the HTTP referrer header to determine where to
                 go back to.
+            home_urls : list of str
+                A list of URLs that should be considered the home page and
+                if the current URL is the home page, the back button should
+                not be shown.
+            back_url : str or Bool
+                The URL that should be used to go back to the previous page.
+                Default: True
+                If True, the extension will make the route /go-back to go back to the previous page.
+                If a string, the extension expects the string to be a user defined route that goes back to the previous page using `get_url()`.
+        
+        Returns
+        -------
+        None
 
         """
         self._excluded_endpoints = set(settings.get("excluded_endpoints", []))
         self._default_url = settings.get("default_url", "/")
         self._use_referrer = settings.get("use_referrer", False)
+        self._home_urls = settings.get("home_urls", [])
+        self._back_url = settings.get("back_url", True)
+        
+        
 
         app.before_request(self._before_request)
         app.context_processor(self._inject_back_url)
         app.extensions = getattr(app, "extensions", {})
         app.extensions["back"] = self
+        
+        self._make_routes(app=app)
+        
+    def _make_routes(self, app: Flask) -> None:
+        """
+        Create the routes for extension utilization
+        
+        Routes
+        ------
+            If self._back_url is True, this creates a route at /go-back that
+            redirects to the previous page.
 
+        Parameters
+        ----------
+        app : Flask
+            The Flask app to create the routes with.
+
+        """
+        if self._back_url == True:
+            @app.route("/go-back")
+            @self.exclude
+            def go_back():
+                return redirect(self.get_url())
+            self._back_url = '/go-back'
+            
     def _before_request(self):
         """
         Save the current URL if the request is a GET and the endpoint is not
         excluded.
+        If `request.method` is not "GET", or the endpoint is excluded, the
+        current URL is not saved.
+        If `request.path` is a -home_url, the current URL is not saved and back_url is set to None.
 
         This is called automatically by the app before each request.
 
         """
+        if request.path.startswith("/static/"):
+            return
+        
         if request.method != "GET":
             return
         
-        if (request.endpoint in self._excluded_endpoints) or (request.path == '/go-back'):
+        if any(request.endpoint.endswith(e) for e in self._excluded_endpoints):
             return
+
+        if request.path == '/go-back':
+            return
+        
+        for home_url in self._home_urls:
+            if request.path == home_url:
+                return
         
         # Prevent saving if referrer is the same as the current path
         referrer = request.referrer
@@ -106,7 +174,7 @@ class Back:
 
         return wrapper
 
-    def get_url(self, default=None):
+    def get_url(self, default: str=None):
         """
         Get the URL to go back to.
 
@@ -123,6 +191,7 @@ class Back:
         :param default: The default URL to return if no URL is saved.
         :return: The URL to go back to
         """
+        
         if "back_url" in session:
             return session["back_url"]
         if self._use_referrer and request.referrer:
@@ -170,4 +239,8 @@ class Back:
 
         :return: A dictionary containing the back URL
         """
+        if request.path in self._home_urls:
+            session.pop("back_url", None)
+            return dict(back_url = None)
+        
         return dict(back_url=self.get_url())

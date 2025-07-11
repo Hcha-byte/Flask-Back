@@ -14,7 +14,7 @@ def app():
     app = Flask(__name__)
     app.secret_key = "test"
     back = Back()
-    back.init_app(app, excluded_endpoints={"excluded"}, default_url="/fallback", use_referrer=True)
+    back.init_app(app, excluded_endpoints={"excluded"}, default_url="/fallback", use_referrer=True, back_url="/go-back")
 
     @app.route("/save")
     @back.save_url

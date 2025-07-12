@@ -1,5 +1,5 @@
 # flask_back/__init__.py
-
+from urllib.parse import urlparse
 
 from flask import request, session, redirect, Flask
 from ._version import __version__
@@ -242,5 +242,9 @@ class Back:
 		if request.path in self._home_urls:
 			session.pop("back_url", None)
 			return dict(back_url = None)
-		
-		return dict(back_url=self.get_url())
+		url=urlparse(self.get_url())
+		if url.netloc == '':
+			return dict(back_url=self.get_url())
+		if url.netloc == request.host:
+			return dict(back_url=self.get_url())
+		return dict(back_url=None)
